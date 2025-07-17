@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using TMPro;
+using UnityEngine.Pool;
 
 public class MainMenuController : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class MainMenuController : MonoBehaviour
     public Button quitButton;
     public Image backgroundImage;
 
+    
     public string gameSceneName = "GameScene";
 
     [Header("中文文本设置")]
