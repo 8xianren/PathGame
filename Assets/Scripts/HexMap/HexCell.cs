@@ -8,6 +8,8 @@ public class HexCell : MonoBehaviour
     private LineRenderer lr;
 
     public HexCoordinates coordinates;
+
+    
     void Start()
     {
         lr = gameObject.AddComponent<LineRenderer>();
@@ -44,6 +46,8 @@ public class HexCell : MonoBehaviour
         lr.loop = true;
 
     }
+
+    
 
     // Update is called once per frame
     void Update()

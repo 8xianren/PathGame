@@ -13,7 +13,7 @@ public class HexGrid : MonoBehaviour
 
     private HexMesh hexMesh;
 
-
+    private BoxCollider collider;
     HexCell[] cells;
     public  TextMeshProUGUI cellLabelPrefab;
 
@@ -33,6 +33,20 @@ public class HexGrid : MonoBehaviour
                 CreateCell(x, z, i++);
             }
         }
+
+        collider = gameObject.AddComponent<BoxCollider>();
+
+        collider.size = new Vector3(
+            (width + 2) * HexMetrics.innerRadius * 2f,
+            0f,
+            (height + 2) * HexMetrics.outerRadius * 1.5f
+        );
+
+        collider.center = new Vector3(
+            (width ) * HexMetrics.innerRadius,
+            0.1f,
+            (height ) * HexMetrics.outerRadius * 0.75f
+        );
     }
 
     void CreateCell(int x, int z, int i)
