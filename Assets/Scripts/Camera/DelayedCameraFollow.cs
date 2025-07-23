@@ -12,14 +12,27 @@ public class DelayedCameraFollow : MonoBehaviour
     public AnimationCurve followCurve; // 跟随的缓动曲线
     
     [Header("位置设置")]
-    public Vector3 positionOffset = new Vector3(0, 5f, -5f); // 相对于目标的偏移量
+    public Vector3 positionOffset = new Vector3(15, 10f, 10f); // 相对于目标的偏移量
     
     private Vector3 initialPosition; // 初始位置
     private float timer = 0f; // 计时器
     private bool startFollowing = false; // 开始跟随标志
-    
+
+    void Awake()
+    {
+        
+       
+        
+
+    }
+
     void Start()
     {
+        PlayerManager.Instance.SpawnPlayer();
+
+        GameObject player = PlayerManager.Instance.PlayerInstance;
+        target = player != null ? player.transform : null;
+
         if (target == null) 
         {
             Debug.LogWarning("摄像机跟随目标未设置！");
@@ -67,6 +80,7 @@ public class DelayedCameraFollow : MonoBehaviour
         // 计算目标位置
         Vector3 targetPosition = target.position + positionOffset;
         
+        //Debug.Log("目标位置: " + targetPosition);
         // 应用缓动移动
         float t = Mathf.Clamp01(timer / followDelay);
         float curveValue = followCurve.Evaluate(t);

@@ -13,7 +13,7 @@ public class HexGrid : MonoBehaviour
 
     private HexMesh hexMesh;
 
-    private BoxCollider collider;
+    private new BoxCollider collider;
     HexCell[] cells;
     public  TextMeshProUGUI cellLabelPrefab;
 
