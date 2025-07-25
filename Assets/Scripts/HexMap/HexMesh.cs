@@ -13,10 +13,17 @@ public class HexMesh : MonoBehaviour
 
     
 
+
+    
+
     public void Awake()
     {
         GetComponent<MeshFilter>().mesh = hexMesh = new Mesh();
         hexMesh.name = "Hex Mesh";
+        MeshRenderer myRender =  gameObject.GetComponent<MeshRenderer>();
+        myRender.material = Resources.Load<Material>("Materials/Stylize Snow.mat");
+
+
         vertices = new List<Vector3>();
         triangles = new List<int>();
 

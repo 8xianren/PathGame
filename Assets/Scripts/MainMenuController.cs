@@ -136,7 +136,7 @@ public class MainMenuController : MonoBehaviour
     }
 
     // 开始游戏按钮事件
-    void OnStartButtonClicked()
+    public void OnStartButtonClicked()
     {
         StartCoroutine(TransitionToGame());
     }

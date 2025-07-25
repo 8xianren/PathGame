@@ -1,9 +1,11 @@
 using UnityEngine;
+using UnityEngine.UI;
+
 
 public class PlayerController : MonoBehaviour
 {
     [Header("移动设置")]
-    public float moveSpeed = 5f;         // 移动速度
+    public float moveSpeed = 10f;         // 移动速度
     public float rotationSpeed = 15f;    // 旋转速度
     public float acceleration = 10f;     // 加速度
     public float deceleration = 15f;     // 减速度
@@ -22,8 +24,14 @@ public class PlayerController : MonoBehaviour
     private Vector3 moveDirection;
     private float currentSpeed;
     private float targetSpeed;
-    private bool isGrounded;
+    private bool isGrounded = true;
     private bool isMoving;
+
+    private CapsuleCollider myCapsuleCollider;
+    private float playerScale;
+    
+
+    public UnityEngine.UI.Button jButton; // 跳跃按钮（如果需要）
 
     void Start()
     {
@@ -32,6 +40,7 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         mainCamera = Camera.main.transform;
 
+        jButton = GameObject.Find("JumpButton").GetComponent<Button>();
         // 查找场景中的摇杆
         joystick = FindObjectOfType<FloatingJoystick>();
         if (joystick == null)
@@ -46,17 +55,28 @@ public class PlayerController : MonoBehaviour
             rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             rb.constraints = RigidbodyConstraints.FreezeRotation;
         }
+        
+        myCapsuleCollider = gameObject.GetComponent<CapsuleCollider>();
+        myCapsuleCollider.center = new Vector3 (0, 1f, 0);
+        myCapsuleCollider.radius = 0.4f;
+        myCapsuleCollider.height = 2f;
+
+        jButton.onClick.AddListener(Jump); // 绑定跳跃按钮事件
+        //jButton.onClick.Invoke();
+        
     }
 
     void Update()
     {
-        //CheckGroundStatus();
+        CheckGroundStatus();
         UpdateAnimations();
+        
     }
 
     void FixedUpdate()
     {
         HandleMovement();
+        
     }
 
     private void CheckGroundStatus()
@@ -71,11 +91,13 @@ public class PlayerController : MonoBehaviour
             isGrounded = true;
 
             // 检查坡度是否可攀爬
+            /*
             float slopeAngle = Vector3.Angle(hit.normal, Vector3.up);
             if (slopeAngle > maxSlopeAngle)
             {
                 isGrounded = false;
             }
+            */
         }
         else
         {
@@ -92,7 +114,7 @@ public class PlayerController : MonoBehaviour
         Vector2 joystickInput = new Vector2(joystick.Horizontal, joystick.Vertical);
 
         // 计算移动方向和速度
-        if (joystickInput.magnitude > 0.1f)
+        if (joystickInput.magnitude > 0.05f)
         {
             // 计算相机相对移动方向
             Vector3 cameraForward = Vector3.Scale(mainCamera.forward, new Vector3(1, 0, 1)).normalized;
@@ -172,14 +194,17 @@ public class PlayerController : MonoBehaviour
     // 跳跃功能
     public void Jump()
     {
+        
         if (isGrounded)
         {
+            
             animator.SetTrigger("Jump");
             rb.AddForce(Vector3.up * 5f, ForceMode.Impulse);
         }
     }
 
     // 在Inspector中显示调试信息
+    /*
     void OnDrawGizmos()
     {
         // 绘制移动方向
@@ -191,4 +216,5 @@ public class PlayerController : MonoBehaviour
         Vector3 rayOrigin = transform.position + Vector3.up * 0.1f;
         Gizmos.DrawLine(rayOrigin, rayOrigin + Vector3.down * 0.2f);
     }
+    */
 }

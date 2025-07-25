@@ -53,6 +53,7 @@ public class PlayerManager : MonoBehaviour
         PlayerInstance.AddComponent<Rigidbody>(); // 添加刚体组件
 
         PlayerInstance.AddComponent<CapsuleCollider>(); // 添加碰撞器组件
+        
 
         PlayerInstance.AddComponent<PlayerController>(); // 添加玩家控制脚本
 
