@@ -53,12 +53,12 @@ public struct HexCoordinates
         return X.ToString() + "\n" + Y.ToString() + "\n" + Z.ToString();
     }
 
-/*
-    public void CalculateCellCoordinates(Vector3 position, ref HexCoordinates res)
-    {
-        res = HexCoordinates.
-    }
-*/
+    /*
+        public void CalculateCellCoordinates(Vector3 position, ref HexCoordinates res)
+        {
+            res = HexCoordinates.
+        }
+    */
     // Start is called before the first frame update
     void Start()
     {
@@ -70,4 +70,6 @@ public struct HexCoordinates
     {
 
     }
+    
+    
 }

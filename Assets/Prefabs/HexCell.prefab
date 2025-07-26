@@ -44,3 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 584b882ca1ffad046b2a5a6a78b76b2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coordinates:
+    x: 0
+    z: 0
+  color: {r: 0.09732112, g: 0.23636018, b: 0.764151, a: 0}

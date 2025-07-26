@@ -2,25 +2,32 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 6
+  serializedVersion: 8
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Stylize Snow
   m_Shader: {fileID: 45, guid: 0000000000000000f000000000000000, type: 0}
-  m_ShaderKeywords: _NORMALMAP _PARALLAXMAP _SPECGLOSSMAP
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _NORMALMAP
+  - _PARALLAXMAP
+  - _SPECGLOSSMAP
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
     - _BumpMap:
-        m_Texture: {fileID: 2800000, guid: 3a5de69d8ecd71b439f9fb6e2057372d, type: 3}
+        m_Texture: {fileID: 2800000, guid: 224b48ce174d5e041b5ff7cb44ff95be, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -40,7 +47,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 9b9564cd828b001479f30f7b519ef809, type: 3}
+        m_Texture: {fileID: 2800000, guid: 6148b98ddcfe25046b3a7c32e57e1d80, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -48,17 +55,18 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
-        m_Texture: {fileID: 2800000, guid: 6c2e0a6a1421a3e48823d0e3b2c7f2b9, type: 3}
+        m_Texture: {fileID: 2800000, guid: b9e576b94127d6747b1e26bfd72bf2b8, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
-        m_Texture: {fileID: 2800000, guid: 30739d4f17365bb42956979fd7f132b4, type: 3}
+        m_Texture: {fileID: 2800000, guid: 0e5b3563d6102ed41b48b07efdfa8b3e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
-        m_Texture: {fileID: 2800000, guid: 9b9564cd828b001479f30f7b519ef809, type: 3}
+        m_Texture: {fileID: 2800000, guid: 6148b98ddcfe25046b3a7c32e57e1d80, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    m_Ints: []
     m_Floats:
     - _BumpScale: 1
     - _Cutoff: 0.5
@@ -70,7 +78,7 @@ Material:
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 0.451
-    - _Parallax: 0.0485
+    - _Parallax: 0.02
     - _Shininess: 0.71
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -81,3 +89,4 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.103773594, g: 0.103773594, b: 0.103773594, a: 1}
+  m_BuildTextureStacks: []

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,7 +6,7 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     [Header("移动设置")]
-    public float moveSpeed = 10f;         // 移动速度
+    public float moveSpeed = 20f;         // 移动速度
     public float rotationSpeed = 15f;    // 旋转速度
     public float acceleration = 10f;     // 加速度
     public float deceleration = 15f;     // 减速度
@@ -29,6 +30,10 @@ public class PlayerController : MonoBehaviour
 
     private CapsuleCollider myCapsuleCollider;
     private float playerScale;
+
+    public event Action<Transform> OnGroundPos;
+
+    public Color coverColor = Color.green; // 覆盖颜色
     
 
     public UnityEngine.UI.Button jButton; // 跳跃按钮（如果需要）
@@ -90,14 +95,16 @@ public class PlayerController : MonoBehaviour
         {
             isGrounded = true;
 
+            OnGroundPos?.Invoke(transform);
+
             // 检查坡度是否可攀爬
-            /*
-            float slopeAngle = Vector3.Angle(hit.normal, Vector3.up);
-            if (slopeAngle > maxSlopeAngle)
-            {
-                isGrounded = false;
-            }
-            */
+                /*
+                float slopeAngle = Vector3.Angle(hit.normal, Vector3.up);
+                if (slopeAngle > maxSlopeAngle)
+                {
+                    isGrounded = false;
+                }
+                */
         }
         else
         {

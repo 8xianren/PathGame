@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+
 using TMPro;
 using UnityEngine;
 
@@ -15,9 +16,11 @@ public class HexGrid : MonoBehaviour
 
     private new BoxCollider collider;
     HexCell[] cells;
-    public  TextMeshProUGUI cellLabelPrefab;
+    public TextMeshProUGUI cellLabelPrefab;
 
     Canvas gridCanvas;
+
+    Color colorPlayer;
 
     void Awake()
     {
@@ -43,11 +46,14 @@ public class HexGrid : MonoBehaviour
         );
 
         collider.center = new Vector3(
-            (width ) * HexMetrics.innerRadius,
+            (width) * HexMetrics.innerRadius,
             0.1f,
-            (height ) * HexMetrics.outerRadius * 0.75f
+            (height) * HexMetrics.outerRadius * 0.75f
         );
     }
+
+
+
 
     void CreateCell(int x, int z, int i)
     {
@@ -68,19 +74,66 @@ public class HexGrid : MonoBehaviour
         label.rectTransform.SetParent(gridCanvas.transform, false);
         label.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
         label.text = cell.coordinates.ToStringOnSeparateLines();
-        
 
+        cell.color = Color.white; // 设置默认颜色
 
     }
     // Start is called before the first frame update
     void Start()
     {
         hexMesh.Triangulate(cells);
+
+        PlayerController player = FindObjectOfType<PlayerController>();
+        colorPlayer = player.coverColor;
+        if (player != null)
+        {
+            player.OnGroundPos += HandlePlayerOnGround;
+        }
+
+    }
+
+    private void HandlePlayerOnGround(Transform playerTransform)
+    {
+        Vector3 playerPosition = playerTransform.position;
+        playerPosition = transform.InverseTransformPoint(playerPosition);
+        HexCoordinates hexCoords = HexMetrics.FromPosition(playerPosition);
+
+        int ox = hexCoords.X + hexCoords.Z / 2;
+        int oz = hexCoords.Z;
+        int index = oz * width + ox;
+        Debug.Log("Player is on hex: " + hexCoords + " at index: " + index);
+
+        //HexMesh hexMesh = GetComponentInChildren<HexMesh>();
+        CoverColor(index, colorPlayer);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+
+    public void CoverColor(int index, Color color)
+    {
+        if (index < 0 || index >= width * height)
+        {
+            Debug.LogWarning("Index out of range for CoverColor: " + index);
+            return;
+        }
+
+        HexCell cell0 = cells[index];
+        cell0.color = color;
+        hexMesh.Triangulate(cells);
+
+    }
+    
+    void OnDestroy()
+    {
+        // 取消订阅防止内存泄漏
+        PlayerController player = FindObjectOfType<PlayerController>();
+        if (player != null)
+        {
+            player.OnGroundPos -= HandlePlayerOnGround;
+        }
     }
 }
