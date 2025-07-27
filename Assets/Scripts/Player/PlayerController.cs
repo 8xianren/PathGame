@@ -68,7 +68,7 @@ public class PlayerController : MonoBehaviour
         myCapsuleCollider = gameObject.GetComponent<CapsuleCollider>();
         myCapsuleCollider.center = new Vector3(0, 1f, 0);
         myCapsuleCollider.radius = 0.4f;
-        myCapsuleCollider.height = 2f;
+        myCapsuleCollider.height = 2.49f;
 
         jButton.onClick.AddListener(Jump); // 绑定跳跃按钮事件
                                            //jButton.onClick.Invoke();
@@ -94,7 +94,7 @@ public class PlayerController : MonoBehaviour
     {
         // 使用射线检测地面状态
         RaycastHit hit;
-        float rayLength = 0.2f;
+        float rayLength = 2f;
         Vector3 rayOrigin = transform.position + Vector3.up * 0.1f;
 
         if (Physics.Raycast(rayOrigin, Vector3.down, out hit, rayLength))

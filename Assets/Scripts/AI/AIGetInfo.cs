@@ -8,7 +8,6 @@ public class AIGetInfo : MonoBehaviour
 
     public int height = 16;
     
-    
 
     public HexCoordinates GetAxisCoordinates(Vector3 nowPosition)
     {
@@ -19,7 +18,7 @@ public class AIGetInfo : MonoBehaviour
         return hexCoords;
     }
 
-    public int GetCellIndex(Vector3 nowPosition)
+    public Vector2Int GetCellIndex(Vector3 nowPosition)
     {
         // Convert the position to hex coordinates
         Vector3 playerPosition = transform.InverseTransformPoint(nowPosition);
@@ -27,7 +26,7 @@ public class AIGetInfo : MonoBehaviour
 
         int ox = hexCoords.X + hexCoords.Z / 2;
         int oz = hexCoords.Z;
-        int index = oz * width + ox;
+        Vector2Int index = new Vector2Int(ox, oz);
         
         return index;
     }
@@ -46,7 +45,7 @@ public class AIGetInfo : MonoBehaviour
         }
     }
 
-    public List<List<HexMetrics.HexOwner>> GetCellOwner()
+    public List<List<HexMetrics.HexOwner>> GetCellList()
     {
         
 
