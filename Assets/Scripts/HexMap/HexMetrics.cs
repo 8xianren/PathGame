@@ -11,6 +11,25 @@ public static class HexMetrics
 
     public const float innerRadius = outerRadius * 0.866025404f;
 
+    public const int width = 16;
+    public const int height = 16;
+    
+
+    public static List<List<HexOwner>> cellOwners = new List<List<HexOwner>>();
+
+    public enum HexOwner
+    {
+        origin,
+        Player,
+        AI0,
+
+        AI1,
+        AI2
+
+    }
+
+     
+
     public static Vector3[] corners = {
         new Vector3(0f, 0f, outerRadius),
         new Vector3(innerRadius, 0f, 0.5f * outerRadius),

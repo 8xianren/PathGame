@@ -31,15 +31,15 @@ public class PlayerController : MonoBehaviour
     private CapsuleCollider myCapsuleCollider;
     private float playerScale;
 
-    public event Action<Transform, Material> OnGroundPos;
+    public event Action<Transform, Material, HexMetrics.HexOwner> OnGroundPos;
 
     //public event Action<Transform, Material> OnGroundPosTex;
 
     public Color coverColor = Color.green; // 覆盖颜色
 
     public Material coverMaterial; // 覆盖材质
-    
 
+    private HexMetrics.HexOwner owner;
     public UnityEngine.UI.Button jButton; // 跳跃按钮（如果需要）
 
     void Start()
@@ -64,15 +64,17 @@ public class PlayerController : MonoBehaviour
             rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
             rb.constraints = RigidbodyConstraints.FreezeRotation;
         }
-        
+
         myCapsuleCollider = gameObject.GetComponent<CapsuleCollider>();
-        myCapsuleCollider.center = new Vector3 (0, 1f, 0);
+        myCapsuleCollider.center = new Vector3(0, 1f, 0);
         myCapsuleCollider.radius = 0.4f;
         myCapsuleCollider.height = 2f;
 
         jButton.onClick.AddListener(Jump); // 绑定跳跃按钮事件
-        //jButton.onClick.Invoke();
-        
+                                           //jButton.onClick.Invoke();
+
+        owner = HexMetrics.HexOwner.Player; // 设置默认所有者为玩家
+
     }
 
     void Update()
@@ -100,7 +102,7 @@ public class PlayerController : MonoBehaviour
             isGrounded = true;
 
 
-            OnGroundPos?.Invoke(transform, coverMaterial);
+            OnGroundPos?.Invoke(transform, coverMaterial, owner);
 
             // 检查坡度是否可攀爬
                 /*

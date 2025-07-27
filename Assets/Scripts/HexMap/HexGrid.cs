@@ -21,13 +21,23 @@ public class HexGrid : MonoBehaviour
     //Canvas gridCanvas;
 
     public float myScale = 1008f;
-    public Dictionary<GameObject, HexOwner> cellsHash = new Dictionary<GameObject, HexOwner>();
+    public Dictionary<GameObject, HexMetrics.HexOwner> cellsHash = new Dictionary<GameObject, HexMetrics.HexOwner>();
+
+    public List<List<HexMetrics.HexOwner>> cellOwners;
 
     void Awake()
     {
         cells = new GameObject[width * height];
+        cellOwners = HexMetrics.cellOwners;
 
-
+        for (int x = 0; x < width; ++x)
+        {
+            cellOwners.Add(new List<HexMetrics.HexOwner>());
+            for (int z = 0; z < height; ++z)
+            {
+                cellOwners[x].Add(HexMetrics.HexOwner.origin);
+            }
+        }
 
         for (int z = 0, i = 0; z < height; ++z)
         {
@@ -78,7 +88,9 @@ public class HexGrid : MonoBehaviour
 
 
 
-        cellsHash.Add(cells[i], HexOwner.origin);
+        cellsHash.Add(cells[i], HexMetrics.HexOwner.origin);
+
+        //cellOwners[x][z] = HexMetrics.HexOwner.origin;
     }
     // Start is called before the first frame update
     void Start()
@@ -97,7 +109,7 @@ public class HexGrid : MonoBehaviour
 
 
 
-    private void HandlePlayerOnGround(Transform playerTransform, Material mat)
+    private void HandlePlayerOnGround(Transform playerTransform, Material mat, HexMetrics.HexOwner owner)
     {
         Vector3 playerPosition = playerTransform.position;
         playerPosition = transform.InverseTransformPoint(playerPosition);
@@ -110,6 +122,10 @@ public class HexGrid : MonoBehaviour
 
         //HexMesh hexMesh = GetComponentInChildren<HexMesh>();
         CoverMaterial(index, mat);
+
+        cellsHash[cells[index]] = owner;
+
+        cellOwners[ox][oz] = owner;
     }
 
     // Update is called once per frame
@@ -146,14 +162,5 @@ public class HexGrid : MonoBehaviour
         }
     }
 
-    public enum HexOwner
-    {
-        origin,
-        Player,
-        AI0,
-
-        AI1,
-        AI2
-
-    }
+    
 }

@@ -8,7 +8,7 @@ public class AIGetInfo : MonoBehaviour
 
     public int height = 16;
     
-    public Animator aiAnimator;
+    
 
     public HexCoordinates GetAxisCoordinates(Vector3 nowPosition)
     {
@@ -46,9 +46,43 @@ public class AIGetInfo : MonoBehaviour
         }
     }
 
+    public List<List<HexMetrics.HexOwner>> GetCellOwner()
+    {
+        
+
+        return HexMetrics.cellOwners;
+    }
+    
+    public float GetDistanceToCell(Vector2Int src, Vector2Int dest)
+    {
+        Vector3 srcPos = GetCellPosition(src);
+        Vector3 destPos = GetCellPosition(dest);
+
+        // Get the index of the target cell
+        
+
+        // Calculate and return the distance
+        return Vector3.Distance(srcPos, destPos);
+    }
+    
+    public Vector3 GetCellPosition(Vector2Int coords)
+    {
+        int x = coords.x;
+        int z = coords.y;
+
+        Vector3 position;
+        position.x = (x + z * 0.5f - z / 2) * (HexMetrics.innerRadius * 2f);
+        position.y = 0f;
+        position.z = z * (HexMetrics.outerRadius * 1.5f);
+        return position;
+    }
+
+
+
+
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }
