@@ -10,6 +10,8 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private GameObject playerPrefab; // 拖入3D人物预制体
     [SerializeField] private Vector3 spawnPosition = new Vector3(8, 40, 0); // 默认出生位置
     [SerializeField] private float scalePlayer = 2f;
+
+    public Material coverMaterial; // 覆盖材质
     // 当前玩家实例
     public GameObject PlayerInstance { get; private set; }
 
@@ -58,7 +60,7 @@ public class PlayerManager : MonoBehaviour
         PlayerInstance.AddComponent<PlayerController>(); // 添加玩家控制脚本
 
 
-
+        PlayerInstance.GetComponent<PlayerController>().coverMaterial = coverMaterial; // 设置覆盖材质
         PlayerInstance.name = "PlayerCharacter"; // 设置实例名称
     }
 

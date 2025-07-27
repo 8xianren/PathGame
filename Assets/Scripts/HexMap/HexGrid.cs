@@ -10,24 +10,24 @@ public class HexGrid : MonoBehaviour
     public int width = 6;
     public int height = 6;
 
-    public HexCell cellPrefab;
+    public GameObject cellPrefab;
 
-    private HexMesh hexMesh;
+
 
     private new BoxCollider collider;
-    HexCell[] cells;
-    public TextMeshProUGUI cellLabelPrefab;
+    public GameObject[] cells;
+    //public TextMeshProUGUI cellLabelPrefab;
 
-    Canvas gridCanvas;
+    //Canvas gridCanvas;
 
-    Color colorPlayer;
+    public float myScale = 1008f;
+    public Dictionary<GameObject, HexOwner> cellsHash = new Dictionary<GameObject, HexOwner>();
 
     void Awake()
     {
-        cells = new HexCell[width * height];
+        cells = new GameObject[width * height];
 
-        gridCanvas = GetComponentInChildren<Canvas>();
-        hexMesh = GetComponentInChildren<HexMesh>();
+
 
         for (int z = 0, i = 0; z < height; ++z)
         {
@@ -62,37 +62,42 @@ public class HexGrid : MonoBehaviour
         position.y = 0f;
         position.z = z * (HexMetrics.outerRadius * 1.5f);
 
-        HexCell cell = cells[i] = Instantiate<HexCell>(cellPrefab);
-        cell.transform.SetParent(transform, false);
-        cell.transform.localPosition = position;
+        cells[i] = Instantiate<GameObject>(cellPrefab);
+        cells[i].transform.SetParent(transform, false);
+        cells[i].transform.localPosition = position;
+        cells[i].transform.localScale = new Vector3(myScale, myScale, myScale);
 
-        cell.coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
+        HexCell hexcell = cells[i].GetComponent<HexCell>();
+        hexcell.coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
+
+
+        //TextMeshProUGUI label = Instantiate<TextMeshProUGUI>(cellLabelPrefab);
+        //label.rectTransform.SetParent(gridCanvas.transform, false);
+        //label.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
+        //label.text = cell.coordinates.ToStringOnSeparateLines();
 
 
 
-        TextMeshProUGUI label = Instantiate<TextMeshProUGUI>(cellLabelPrefab);
-        label.rectTransform.SetParent(gridCanvas.transform, false);
-        label.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
-        label.text = cell.coordinates.ToStringOnSeparateLines();
-
-        cell.color = Color.white; // 设置默认颜色
-
+        cellsHash.Add(cells[i], HexOwner.origin);
     }
     // Start is called before the first frame update
     void Start()
     {
-        hexMesh.Triangulate(cells);
+
 
         PlayerController player = FindObjectOfType<PlayerController>();
-        colorPlayer = player.coverColor;
+
         if (player != null)
         {
+
             player.OnGroundPos += HandlePlayerOnGround;
         }
 
     }
 
-    private void HandlePlayerOnGround(Transform playerTransform)
+
+
+    private void HandlePlayerOnGround(Transform playerTransform, Material mat)
     {
         Vector3 playerPosition = playerTransform.position;
         playerPosition = transform.InverseTransformPoint(playerPosition);
@@ -101,32 +106,35 @@ public class HexGrid : MonoBehaviour
         int ox = hexCoords.X + hexCoords.Z / 2;
         int oz = hexCoords.Z;
         int index = oz * width + ox;
-        Debug.Log("Player is on hex: " + hexCoords + " at index: " + index);
+        //Debug.Log("Player is on hex: " + hexCoords + " at index: " + index);
 
         //HexMesh hexMesh = GetComponentInChildren<HexMesh>();
-        CoverColor(index, colorPlayer);
+        CoverMaterial(index, mat);
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        for (int i = 0; i < cells.Length; i++)
+        {
+            cells[i].transform.localScale = new Vector3(myScale, myScale, myScale);
+        }
     }
 
-    public void CoverColor(int index, Color color)
+    public void CoverMaterial(int index, Material mat)
     {
         if (index < 0 || index >= width * height)
         {
-            Debug.LogWarning("Index out of range for CoverColor: " + index);
+            Debug.LogWarning("Index out of range for CoverMaterial: " + index);
             return;
         }
 
-        HexCell cell0 = cells[index];
-        cell0.color = color;
-        hexMesh.Triangulate(cells);
+        GameObject cell0 = cells[index];
+        cell0.GetComponent<Renderer>().material = mat;
+        
 
     }
-    
+
     void OnDestroy()
     {
         // 取消订阅防止内存泄漏
@@ -134,6 +142,18 @@ public class HexGrid : MonoBehaviour
         if (player != null)
         {
             player.OnGroundPos -= HandlePlayerOnGround;
+
         }
+    }
+
+    public enum HexOwner
+    {
+        origin,
+        Player,
+        AI0,
+
+        AI1,
+        AI2
+
     }
 }

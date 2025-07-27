@@ -31,9 +31,13 @@ public class PlayerController : MonoBehaviour
     private CapsuleCollider myCapsuleCollider;
     private float playerScale;
 
-    public event Action<Transform> OnGroundPos;
+    public event Action<Transform, Material> OnGroundPos;
+
+    //public event Action<Transform, Material> OnGroundPosTex;
 
     public Color coverColor = Color.green; // 覆盖颜色
+
+    public Material coverMaterial; // 覆盖材质
     
 
     public UnityEngine.UI.Button jButton; // 跳跃按钮（如果需要）
@@ -95,7 +99,8 @@ public class PlayerController : MonoBehaviour
         {
             isGrounded = true;
 
-            OnGroundPos?.Invoke(transform);
+
+            OnGroundPos?.Invoke(transform, coverMaterial);
 
             // 检查坡度是否可攀爬
                 /*
