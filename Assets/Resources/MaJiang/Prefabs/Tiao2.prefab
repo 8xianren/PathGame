@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 277535191388011288}
   - component: {fileID: 9092503425161818875}
   - component: {fileID: 3766551367937234408}
+  - component: {fileID: -7408985594760480946}
   m_Layer: 0
   m_Name: Tiao2
   m_TagString: Untagged
@@ -83,3 +84,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &-7408985594760480946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1480179889360903824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e0158294db6a3d4f907b6139f863a87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemType: 4

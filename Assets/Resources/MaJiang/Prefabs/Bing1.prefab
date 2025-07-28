@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6145651605878707095}
   - component: {fileID: 1266844741233662339}
   - component: {fileID: 1905103371252291742}
+  - component: {fileID: -6359749079728909724}
   m_Layer: 0
   m_Name: Bing1
   m_TagString: Untagged
@@ -83,3 +84,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &-6359749079728909724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 432561316082150792}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e0158294db6a3d4f907b6139f863a87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemType: 0

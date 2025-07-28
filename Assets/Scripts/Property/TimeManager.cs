@@ -8,6 +8,7 @@ public class TimerManager : MonoBehaviour
 {
     public static TimerManager Instance { get; private set; }
 
+
     [Header("Settings")]
     public float warmupDuration = 30f;
     public float gameDuration = 120f;
@@ -39,7 +40,7 @@ public class TimerManager : MonoBehaviour
 
     void Awake()
     {
-        
+
         // 单例初始化
         if (Instance != null && Instance != this)
         {
@@ -71,12 +72,22 @@ public class TimerManager : MonoBehaviour
         n = itemPrefabs.Length;
         currentTime = 0f;
         timerDisplay.text = FormatTime(currentTime);
+        var temp = gameObject.AddComponent<AudioSource>();
+        AudioClip clip = Resources.Load<AudioClip>("Audio/playing");
+        temp.PlayOneShot(clip);
         StartCoroutine(GameTimer());
+
     }
 
 
     IEnumerator GameTimer()
     {
+        while (currentTime < 3)
+        {
+            currentTime += Time.deltaTime;
+            yield return null;
+        }
+        currentTime -= 3;
         // 第一阶段：前30秒
         while (currentTime < warmupDuration)
         {
@@ -123,19 +134,19 @@ public class TimerManager : MonoBehaviour
 
                 itemPrefab.transform.localScale = new Vector3(maJiangScale, maJiangScale, maJiangScale);
 
-                
 
-                
+
+
 
                 GameObject newItem = Instantiate(itemPrefab, position, Quaternion.identity);
-                
-                newItem.AddComponent<CollectibleItem>();
+
+                //newItem.AddComponent<CollectibleItem>();
                 newItem.AddComponent<BoxCollider>();
                 newItem.GetComponent<BoxCollider>().isTrigger = true;
                 newItem.GetComponent<BoxCollider>().size = new Vector3(0.024f, 0.03f, 0.01f);
                 newItem.GetComponent<BoxCollider>().center = new Vector3(0, 0f, 0);
 
-                
+
 
 
                 activeItems++;
@@ -154,12 +165,13 @@ public class TimerManager : MonoBehaviour
         isSpawningItems = false;
         timerDisplay.text = "游戏结束!";
         timerDisplay.color = Color.red;
-        
+
         // 游戏结束逻辑
     }
 
     public string FormatTime(float time)
     {
+        time = gameDuration - time;
         int minutes = Mathf.FloorToInt(time / 60);
         int seconds = Mathf.FloorToInt(time % 60);
         return $"{minutes:00}:{seconds:00}";

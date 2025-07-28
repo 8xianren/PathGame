@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using TMPro;
+using UnityEditor.Animations;
 using UnityEngine;
 
 public class HexGrid : MonoBehaviour
@@ -60,6 +61,12 @@ public class HexGrid : MonoBehaviour
             0.1f,
             (height) * HexMetrics.outerRadius * 0.75f
         );
+
+
+        for (int i = 0; i < cells.Length; i++)
+        {
+            cells[i].transform.localScale = new Vector3(myScale, myScale, myScale);
+        }
     }
 
 
@@ -105,7 +112,100 @@ public class HexGrid : MonoBehaviour
             player.OnGroundPos += HandlePlayerOnGround;
         }
 
+        AIController[] aiControllers = FindObjectsOfType<AIController>();
+
+        for (int i = 0; i < aiControllers.Length; i++)
+        {
+            AIController aiController = aiControllers[i];
+            if (aiController != null)
+            {
+                aiController.AIOnGroundPos += HandleAIOnGround;
+            }
+            AIManager.Instance.AIInstances[i].GetComponent<Package>().changeMat += HandleCrashEffect;
+
+        }
+
+        InventoryManager.Instance.changeMat += HandleCrashEffect;
+
     }
+
+    private void HandleCrashEffect(Vector3 pos, Material mat, HexMetrics.HexOwner owner)
+    {
+
+        List<Vector2Int> needTobePrintCells = HexMetrics.GetLinkedCells(pos);
+
+        
+
+        foreach (var Child in needTobePrintCells)
+        {
+            int x = Child.x;
+            int z = Child.y;
+
+            
+
+            cellOwners[x][z] = owner;
+
+            int index = z * width + x;
+
+            CoverMaterial(index, mat);
+            cellsHash[cells[index]] = owner;
+
+        }
+        
+        
+    }
+
+    private void HandleAIOnGround(Transform playerTransform, Material mat, HexMetrics.HexOwner owner)
+    {
+        Vector3 playerPosition = playerTransform.position;
+        playerPosition = transform.InverseTransformPoint(playerPosition);
+        HexCoordinates hexCoords = HexMetrics.FromPosition(playerPosition);
+
+        int ox = hexCoords.X + hexCoords.Z / 2;
+        int oz = hexCoords.Z;
+        int index = oz * width + ox;
+
+        if (index < 0 || index >= width * height || ox < 0 || ox >= width || oz < 0 || oz >= height)
+        {
+            //Debug.LogWarning("Index out of range for HandleAIOnGround: " + index);
+            return;
+        }
+        //Debug.Log("AI is on hex: " + hexCoords + " at index: " + index);
+
+        //HexMesh hexMesh = GetComponentInChildren<HexMesh>();
+
+        /*
+        if (cellOwners[ox][oz] == owner)
+        {
+            Debug.LogWarning("Owner already set for this cell: " + owner);
+            return;
+        }
+        */
+
+
+
+        CoverMaterial(index, mat);
+        //Debug.Log("AI CoverMaterial at index: " + index + " with owner: " + owner);
+
+        cellsHash[cells[index]] = owner;
+
+        cellOwners[ox][oz] = owner;
+    }
+
+
+    private Vector2Int TransCoordsTo(Transform playerTransform)
+    {
+        Vector3 playerPosition = playerTransform.position;
+        playerPosition = transform.InverseTransformPoint(playerPosition);
+        HexCoordinates hexCoords = HexMetrics.FromPosition(playerPosition);
+
+        int ox = hexCoords.X + hexCoords.Z / 2;
+        int oz = hexCoords.Z;
+
+        return new Vector2Int(ox, oz);
+    }
+
+    
 
 
 
@@ -118,9 +218,23 @@ public class HexGrid : MonoBehaviour
         int ox = hexCoords.X + hexCoords.Z / 2;
         int oz = hexCoords.Z;
         int index = oz * width + ox;
-        //Debug.Log("Player is on hex: " + hexCoords + " at index: " + index);
 
-        //HexMesh hexMesh = GetComponentInChildren<HexMesh>();
+        if (index < 0 || index >= width * height || ox < 0 || ox >= width || oz < 0 || oz >= height)
+        {
+            //Debug.LogWarning("Index out of range for HandlePlayerOnGround: " + index);
+            return;
+        }
+        
+        /*
+        if (cellOwners[ox][oz] == owner)
+        {
+            //Debug.LogWarning("Owner already set for this cell: " + owner);
+            return;
+
+        }
+        */
+
+
         CoverMaterial(index, mat);
 
         cellsHash[cells[index]] = owner;
@@ -131,10 +245,7 @@ public class HexGrid : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        for (int i = 0; i < cells.Length; i++)
-        {
-            cells[i].transform.localScale = new Vector3(myScale, myScale, myScale);
-        }
+        
     }
 
     public void CoverMaterial(int index, Material mat)
@@ -160,6 +271,19 @@ public class HexGrid : MonoBehaviour
             player.OnGroundPos -= HandlePlayerOnGround;
 
         }
+        AIController[] aiControllers = FindObjectsOfType<AIController>();
+
+        for (int i = 0; i < aiControllers.Length; i++)
+        {
+            AIController aiController = aiControllers[i];
+            if (aiController != null)
+            {
+                aiController.AIOnGroundPos -= HandleAIOnGround;
+            }
+            AIManager.Instance.AIInstances[i].GetComponent<Package>().changeMat -= HandleCrashEffect;
+        }
+
+        InventoryManager.Instance.changeMat -= HandleCrashEffect;
     }
 
     

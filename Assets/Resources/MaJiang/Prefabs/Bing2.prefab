@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4327861406789263292}
   - component: {fileID: 7675766613553096048}
   - component: {fileID: 7661767039291229262}
+  - component: {fileID: -2658217780983560450}
   m_Layer: 0
   m_Name: Bing2
   m_TagString: Untagged
@@ -83,3 +84,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &-2658217780983560450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 915177820982576034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e0158294db6a3d4f907b6139f863a87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemType: 1

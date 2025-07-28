@@ -7,7 +7,7 @@ public class AIManager : MonoBehaviour
     public static AIManager Instance { get; private set; }
     [Header("AI设置")]
     [SerializeField] private List<GameObject> AIPrefabs; // 拖入3D人物预制体
-    [SerializeField] private float scaleAI = 2f;
+    [SerializeField] private float scaleAI = 4f;
 
     [SerializeField] private List<Material> coverMaterials; // 覆盖材质列表
 
@@ -73,8 +73,17 @@ public class AIManager : MonoBehaviour
             AIInstance.GetComponent<AIController>().coverMaterial = coverMaterials[i]; // 设置覆盖材质
             AIInstance.name = "AICharacter" + i; // 设置实例名称
 
+            string tagName = "AI" + i.ToString(); // 设置标签
+            
+            AIInstance.tag = tagName; // 设置标签
+
+            AIInstance.AddComponent<Enemy>();
+            AIInstance.layer = 6;
+
+            AIInstance.AddComponent<Package>();
+
             AIInstances.Add(AIInstance);
-            Debug.Log("生成 AI" + i);
+            //Debug.Log("生成 AI" + i);
         }
         
         

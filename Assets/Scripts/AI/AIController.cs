@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using System.Collections;
 
 public class AIController : MonoBehaviour
 {
@@ -24,12 +25,13 @@ public class AIController : MonoBehaviour
     private Rigidbody rb;
 
 
+
     // 移动状态
     private Vector3 moveDirection;
     private float currentSpeed;
 
     private CapsuleCollider myCapsuleCollider;
-    public event Action<Transform, Material, HexMetrics.HexOwner> OnGroundPos;
+    public event Action<Transform, Material, HexMetrics.HexOwner> AIOnGroundPos;
 
     //public event Action<Transform, Material> OnGroundPosTex;
 
@@ -54,8 +56,13 @@ public class AIController : MonoBehaviour
     };
     private const int width = 16;
 
+    //private int height = 16;
+
+    private bool isMoving = false;
+
     void Start()
     {
+
         // 获取组件引用
         aiAnimator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
@@ -89,24 +96,87 @@ public class AIController : MonoBehaviour
             }
         }
         CellList = info.GetCellList();
+
+        GetComponent<Package>().speedUpAction += HandleSpeedUp;
+
+        SetRandomTarget();
+        // 启动目标更新协程
+        StartCoroutine(UpdateTargetRoutine());
+    }
+
+    private void HandleSpeedUp(float speedMultiplier, int duration)
+    {
+        // 处理加速逻辑
+        StartCoroutine(SpeedBoost(speedMultiplier, duration));
+
+    }
+
+    IEnumerator SpeedBoost(float speedMultiplier, int duration)
+    {
+
+        moveSpeed = moveSpeed * speedMultiplier; // 速度提升1倍
+
+        yield return new WaitForSeconds(duration); // 持续5秒
+
+        moveSpeed /= speedMultiplier; // 恢复基础速度
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        index = info.GetCellIndex(transform.position);
+
+        if (!isMoving)
+        {
+            return;
+
+        }
+
         // CellList = info.GetCellList();
-        if ((target_pos.x == -1) || (target_pos == index) || (last_index != index))
-            SetTarget();
+        //if ((target_pos.x == -1) || (target_pos == index) || (last_index != index))
+        //SetTarget();
+
+        index = info.GetCellIndex(transform.position);
         if (CellList[index.x][index.y] != owner)
             CellList[index.x][index.y] = owner;
         // Debug.Log("目标坐标" + target_pos);
         // Debug.Log("当前坐标" + index);
-        if (target_pos != index)
-        {
-            MoveToTargetPosition(info.GetCellPosition(target_pos));
-        }
+
+
+
+
+
+        MoveToTargetPosition(info.GetCellPosition(target_pos));
+
         last_index = index;
+    }
+
+    IEnumerator UpdateTargetRoutine()
+    {
+        while (true)
+        {
+            // 等待指定间隔
+            yield return new WaitForSeconds(1.5f);
+
+            // 设置新目标
+            SetRandomTarget();
+        }
+    }
+    void SetRandomTarget()
+    {
+        int a1 = UnityEngine.Random.Range(0, 100);
+        if (a1 < 60)
+        {
+            target_pos.x = UnityEngine.Random.Range(3, 11);
+            target_pos.y = UnityEngine.Random.Range(3, 11);
+        }
+        else
+        {
+            target_pos.x = UnityEngine.Random.Range(0, 16);
+            target_pos.y = UnityEngine.Random.Range(0, 16);
+
+        }
+        isMoving = true;
     }
 
     private void SetTarget()
@@ -133,12 +203,27 @@ public class AIController : MonoBehaviour
             }
         }
         target_pos = tp[Owner2Idx[HexMetrics.HexOwner.origin]];
-        Debug.Log("角色ID" + owner + "目标坐标"+target_pos);
+        //Debug.Log("角色ID" + owner + "目标坐标"+target_pos);
         // if (owner == HexMetrics.HexOwner.AI0)
         // {
         //     Debug.Log("目标坐标"+target_pos);
         // }
         // target_pos = new Vector2Int(10, 10);
+    }
+
+    public void Stayed()
+    {
+        Vector3 targetPos = transform.position;
+
+        float currentTime = 0f;
+
+        while (currentTime < 2f)
+        {
+            currentTime += Time.deltaTime;
+
+            MoveToTargetPosition(targetPos);
+        }
+
     }
 
     public void MoveToTargetPosition(Vector3 targetPosition)
@@ -164,8 +249,19 @@ public class AIController : MonoBehaviour
 
         // 更新动画状态
         aiAnimator.SetFloat("Speed", currentSpeed);
-        
-        OnGroundPos?.Invoke(transform, coverMaterial, owner);
 
+
+        AIOnGroundPos?.Invoke(transform, coverMaterial, owner);
+
+        if (Vector3.Distance(targetPosition, transform.position) < 0.1f)
+        {
+            isMoving = false;
+        }
+
+
+    }
+    void OnDestroy()
+    {
+        GetComponent<Package>().speedUpAction -= HandleSpeedUp;
     }
 }

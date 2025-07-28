@@ -7,8 +7,8 @@ using TMPro;
 public class ItemSlot : MonoBehaviour
 {
     public Image iconImage;
-    public GameObject countPanel;
-    public TextMeshProUGUI countText;
+    //public GameObject countPanel;
+    //public TextMeshProUGUI countText;
     
     private ItemType currentItemType;
     
@@ -18,8 +18,9 @@ public class ItemSlot : MonoBehaviour
         currentItemType = type;
 
         // 显示堆叠数量（如果有）
-        //int count = InventoryManager.Instance.GetItemCount(type);
-        int count = 1;
+        int count = InventoryManager.Instance.GetItemCount(type);
+        
+        /*
         if (count > 1)
         {
             countPanel.SetActive(true);
@@ -29,6 +30,7 @@ public class ItemSlot : MonoBehaviour
         {
             countPanel.SetActive(false);
         }
+        */
     }
     
     // 点击道具槽（可选功能）

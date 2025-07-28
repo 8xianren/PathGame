@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,6 +33,7 @@ public class PlayerController : MonoBehaviour
     private CapsuleCollider myCapsuleCollider;
     private float playerScale;
 
+
     public event Action<Transform, Material, HexMetrics.HexOwner> OnGroundPos;
 
     //public event Action<Transform, Material> OnGroundPosTex;
@@ -44,6 +47,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+
         // 获取组件引用
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody>();
@@ -75,19 +79,87 @@ public class PlayerController : MonoBehaviour
 
         owner = HexMetrics.HexOwner.Player; // 设置默认所有者为玩家
 
+        InventoryManager.Instance.speedUpAction += HandleSpeedUp; // 订阅加速事件
+
+        Play321();
+
     }
 
     void Update()
     {
         CheckGroundStatus();
         UpdateAnimations();
-        
+
     }
 
     void FixedUpdate()
     {
         HandleMovement();
-        
+
+    }
+
+    public void PlayEat()
+    {
+        AudioClip clip = Resources.Load<AudioClip>("Audio/chi");
+        var audioSource = GetComponent<AudioSource>();
+
+        audioSource.PlayOneShot(clip);
+    }
+
+    public void PlayPong()
+    { 
+        AudioClip clip = Resources.Load<AudioClip>("Audio/pong");
+        var audioSource = GetComponent<AudioSource>();
+
+        audioSource.PlayOneShot(clip);
+
+    }
+
+    public void PlayGet()
+    { 
+        AudioClip clip = Resources.Load<AudioClip>("Audio/get");
+        var audioSource = GetComponent<AudioSource>();
+
+        audioSource.PlayOneShot(clip);
+    }
+
+    public void PlaySpeedUp()
+    { 
+        AudioClip clip = Resources.Load<AudioClip>("Audio/speedup");
+        var audioSource = GetComponent<AudioSource>();
+
+        audioSource.PlayOneShot(clip);
+    }
+
+     public void Play321()
+    { 
+        AudioClip clip = Resources.Load<AudioClip>("Audio/countdown");
+        var audioSource = GetComponent<AudioSource>();
+
+        audioSource.PlayOneShot(clip);
+    }
+
+    private void HandleSpeedUp(float speedMultiplier, int duration)
+    {
+        // 处理加速逻辑
+        StartCoroutine(SpeedBoost(speedMultiplier, duration));
+
+    }
+
+    public void Stayed()
+    {
+        HandleSpeedUp(0.1f, 3);
+    }
+
+    IEnumerator SpeedBoost(float speedMultiplier, int duration)
+    {
+
+        moveSpeed = moveSpeed * speedMultiplier; // 速度提升1倍
+
+        yield return new WaitForSeconds(duration); // 持续5秒
+
+        moveSpeed /= speedMultiplier; // 恢复基础速度
+
     }
 
     private void CheckGroundStatus()
@@ -104,14 +176,16 @@ public class PlayerController : MonoBehaviour
 
             OnGroundPos?.Invoke(transform, coverMaterial, owner);
 
+
+
             // 检查坡度是否可攀爬
-                /*
-                float slopeAngle = Vector3.Angle(hit.normal, Vector3.up);
-                if (slopeAngle > maxSlopeAngle)
-                {
-                    isGrounded = false;
-                }
-                */
+            /*
+            float slopeAngle = Vector3.Angle(hit.normal, Vector3.up);
+            if (slopeAngle > maxSlopeAngle)
+            {
+                isGrounded = false;
+            }
+            */
         }
         else
         {
@@ -208,12 +282,12 @@ public class PlayerController : MonoBehaviour
     // 跳跃功能
     public void Jump()
     {
-        
+
         if (isGrounded)
         {
-            
+
             animator.SetTrigger("Jump");
-            rb.AddForce(Vector3.up * 5f, ForceMode.Impulse);
+            rb.AddForce(Vector3.up * 9f, ForceMode.Impulse);
         }
     }
 
@@ -231,4 +305,9 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawLine(rayOrigin, rayOrigin + Vector3.down * 0.2f);
     }
     */
+
+    void OnDestroy()
+    {
+        InventoryManager.Instance.speedUpAction -= HandleSpeedUp;
+    }
 }
