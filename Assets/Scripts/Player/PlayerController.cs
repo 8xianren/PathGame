@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 
@@ -33,6 +34,12 @@ public class PlayerController : MonoBehaviour
     private CapsuleCollider myCapsuleCollider;
     private float playerScale;
 
+    public Vector2Int index;
+
+    public Vector2Int last_index;
+
+    public AIGetInfo  info;
+
 
     public event Action<Transform, Material, HexMetrics.HexOwner> OnGroundPos;
 
@@ -47,6 +54,8 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+
+        info = GameObject.Find("HexGrid").GetComponent<AIGetInfo>();
 
         // 获取组件引用
         animator = GetComponent<Animator>();
@@ -87,8 +96,10 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        index = info.GetCellIndex(transform.position);
         CheckGroundStatus();
         UpdateAnimations();
+        last_index = index;
 
     }
 
@@ -173,8 +184,8 @@ public class PlayerController : MonoBehaviour
         {
             isGrounded = true;
 
-
-            OnGroundPos?.Invoke(transform, coverMaterial, owner);
+            if(last_index != index) 
+             OnGroundPos?.Invoke(transform, coverMaterial, owner);
 
 
 

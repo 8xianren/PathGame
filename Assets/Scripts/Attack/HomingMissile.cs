@@ -14,7 +14,7 @@ public class HomingMissile : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         // 2秒后自动销毁防止卡顿
-        Destroy(gameObject, 5f); 
+        Destroy(gameObject, 5f);
         Vector3 direction = target.transform.position - rb.position;
         float dis = direction.magnitude;
         speed = dis / 2.5f;
@@ -22,7 +22,7 @@ public class HomingMissile : MonoBehaviour
 
     void FixedUpdate()
     {
-        if(target == null)
+        if (target == null)
         {
             Destroy(gameObject);
             return;
@@ -30,28 +30,29 @@ public class HomingMissile : MonoBehaviour
 
         // 计算方向
         Vector3 direction = target.transform.position - rb.position;
-        
+
         direction.Normalize();
-        
+
         // 计算旋转
         Vector3 rotateAmount = Vector3.Cross(transform.forward, direction);
         rb.angularVelocity = rotateAmount * rotateSpeed;
-        
+
         rb.velocity = transform.forward * speed;
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
-        {
-            PlayerManager.Instance.PlayerInstance.GetComponent<PlayerController>().Stayed();
-            Destroy(gameObject);
-            return;
-        }
+
         if (other.gameObject == target)
+        {
+            if (other.gameObject.CompareTag("Player"))
             {
-                target.GetComponent<Enemy>().Stun();
+                PlayerManager.Instance.PlayerInstance.GetComponent<PlayerController>().Stayed();
                 Destroy(gameObject);
+                return;
             }
+            target.GetComponent<Enemy>().Stun();
+            Destroy(gameObject);
+        }
     }
 }

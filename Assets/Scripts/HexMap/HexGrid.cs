@@ -280,7 +280,7 @@ public class HexGrid : MonoBehaviour
             {
                 aiController.AIOnGroundPos -= HandleAIOnGround;
             }
-            AIManager.Instance.AIInstances[i].GetComponent<Package>().changeMat -= HandleCrashEffect;
+            //AIManager.Instance.AIInstances[i].GetComponent<Package>().changeMat -= HandleCrashEffect;
         }
 
         InventoryManager.Instance.changeMat -= HandleCrashEffect;

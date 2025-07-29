@@ -56,7 +56,7 @@ public class AIController : MonoBehaviour
     };
     private const int width = 16;
 
-    //private int height = 16;
+    private int height = 16;
 
     private bool isMoving = false;
 
@@ -137,6 +137,12 @@ public class AIController : MonoBehaviour
         //SetTarget();
 
         index = info.GetCellIndex(transform.position);
+        if (index.x < 0 || index.y < 0 || index.x >= width || index.y >= height)
+        {
+            MoveToTargetPosition(info.GetCellPosition(target_pos));
+            return;
+        }
+        
         if (CellList[index.x][index.y] != owner)
             CellList[index.x][index.y] = owner;
         // Debug.Log("目标坐标" + target_pos);

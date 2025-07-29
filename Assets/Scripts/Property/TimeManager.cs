@@ -10,7 +10,7 @@ public class TimerManager : MonoBehaviour
 
 
     [Header("Settings")]
-    public float warmupDuration = 30f;
+    public float warmupDuration = 10f;
     public float gameDuration = 120f;
     public float spawnInterval = 2f;
     public int maxItems = 45;
@@ -37,6 +37,7 @@ public class TimerManager : MonoBehaviour
     public int mapWidth = 16;
     public int mapHeight = 16;
 
+    public GameObject pWind;
 
     void Awake()
     {
@@ -166,6 +167,11 @@ public class TimerManager : MonoBehaviour
         timerDisplay.text = "游戏结束!";
         timerDisplay.color = Color.red;
 
+        Time.timeScale = 0;
+
+        pWind.SetActive(true);
+
+        
         // 游戏结束逻辑
     }
 
