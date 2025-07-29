@@ -25,6 +25,6 @@ public class RankScores : MonoBehaviour
     private void ClosePopup()
     {
         popupWindow.SetActive(false); // 隐藏窗口
-        SceneManager.LoadScene(gameSceneName);
+        //SceneManager.LoadScene(gameSceneName);
     }
 }
